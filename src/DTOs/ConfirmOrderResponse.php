@@ -15,6 +15,16 @@ readonly class ConfirmOrderResponse
         public ?int $actionCode = null,
         public ?string $actionCodeDescription = null,
         public ?string $errorMessage = null,
+        public ?string $expiration = null,
+        public ?string $cardholderName = null,
+        public ?string $authorizationResponseId = null,
+        public ?string $approvalCode = null,
+        public ?string $ip = null,
+        public ?string $clientId = null,
+        public ?string $bindingId = null,
+        public ?string $paymentAccountReference = null,
+        public ?string $description = null,
+        public ?array $params = null,
     ) {
     }
 
@@ -48,6 +58,60 @@ readonly class ConfirmOrderResponse
         return $this->orderStatus === 3;
     }
 
+    public function getStatusName(): string
+    {
+        return match ($this->orderStatus) {
+            0 => 'Order registered, but not paid',
+            -1 => 'Transaction failed',
+            1 => 'Transaction approved / Pre-authorized',
+            2 => 'Amount deposited successfully',
+            3 => 'Authorization reversed',
+            4 => 'Transaction refunded',
+            6 => 'Authorization declined',
+            7 => 'Card added',
+            8 => 'Card updated',
+            9 => 'Card verified',
+            10 => 'Recurring template added',
+            11 => 'Debited',
+            default => 'Unknown status',
+        };
+    }
+
+    public function getAmountInDinars(): float
+    {
+        return $this->amount ? $this->amount / 100 : 0;
+    }
+
+    public function getDepositAmountInDinars(): float
+    {
+        return $this->depositAmount ? $this->depositAmount / 100 : 0;
+    }
+
+    public function getUdfFields(): array
+    {
+        if (! $this->params) {
+            return [];
+        }
+
+        return [
+            'udf1' => $this->params['udf1'] ?? null,
+            'udf2' => $this->params['udf2'] ?? null,
+            'udf3' => $this->params['udf3'] ?? null,
+            'udf4' => $this->params['udf4'] ?? null,
+            'udf5' => $this->params['udf5'] ?? null,
+        ];
+    }
+
+    public function getResponseCode(): ?string
+    {
+        return $this->params['respCode'] ?? null;
+    }
+
+    public function getResponseCodeDescription(): ?string
+    {
+        return $this->params['respCode_desc'] ?? null;
+    }
+
     public static function fromArray(array $data): self
     {
         return new self(
@@ -60,7 +124,17 @@ readonly class ConfirmOrderResponse
             currency: $data['currency'] ?? null,
             actionCode: isset($data['actionCode']) ? (int) $data['actionCode'] : null,
             actionCodeDescription: $data['actionCodeDescription'] ?? null,
-            errorMessage: $data['errorMessage'] ?? null,
+            errorMessage: $data['errorMessage'] ?? $data['ErrorMessage'] ?? null,
+            expiration: $data['expiration'] ?? null,
+            cardholderName: $data['cardholderName'] ?? null,
+            authorizationResponseId: $data['authorizationResponseId'] ?? null,
+            approvalCode: $data['approvalCode'] ?? null,
+            ip: $data['Ip'] ?? $data['ip'] ?? null,
+            clientId: $data['clientId'] ?? null,
+            bindingId: $data['bindingId'] ?? null,
+            paymentAccountReference: $data['paymentAccountReference'] ?? null,
+            description: $data['Description'] ?? $data['description'] ?? null,
+            params: $data['params'] ?? null,
         );
     }
 }

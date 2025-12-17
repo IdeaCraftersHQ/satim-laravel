@@ -4,7 +4,6 @@ namespace Oss\SatimLaravel;
 
 use Oss\SatimLaravel\Client\SatimClient;
 use Oss\SatimLaravel\Concerns\ConvertsAmounts;
-use Oss\SatimLaravel\Concerns\GeneratesOrderNumbers;
 use Oss\SatimLaravel\Contracts\SatimInterface;
 use Oss\SatimLaravel\DTOs\ConfirmOrderData;
 use Oss\SatimLaravel\DTOs\ConfirmOrderResponse;
@@ -12,10 +11,11 @@ use Oss\SatimLaravel\DTOs\RefundOrderData;
 use Oss\SatimLaravel\DTOs\RefundOrderResponse;
 use Oss\SatimLaravel\DTOs\RegisterOrderData;
 use Oss\SatimLaravel\DTOs\RegisterOrderResponse;
+use Oss\SatimLaravel\Exceptions\SatimValidationException;
 
 class Satim implements SatimInterface
 {
-    use ConvertsAmounts, GeneratesOrderNumbers;
+    use ConvertsAmounts;
 
     private ?int $amount = null;
     private ?string $orderNumber = null;
@@ -116,8 +116,12 @@ class Satim implements SatimInterface
 
     public function register(): RegisterOrderResponse
     {
+        if ($this->orderNumber === null) {
+            throw new SatimValidationException('Order number is required');
+        }
+
         $data = new RegisterOrderData(
-            orderNumber: $this->orderNumber ?? $this->generateOrderNumber(),
+            orderNumber: $this->orderNumber,
             amount: $this->amount,
             currency: $this->currency,
             returnUrl: $this->returnUrl,

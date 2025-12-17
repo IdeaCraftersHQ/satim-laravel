@@ -53,4 +53,19 @@ return [
     'verify_ssl' => env('SATIM_HTTP_VERIFY_SSL', true),
     'timeout' => env('SATIM_HTTP_TIMEOUT', 30),
     'connect_timeout' => env('SATIM_HTTP_CONNECT_TIMEOUT', 10),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logging Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Enable logging of SATIM API requests/responses for debugging.
+    | Credentials are automatically sanitized from logs.
+    |
+    */
+
+    'logging' => [
+        'enabled' => env('SATIM_LOGGING_ENABLED', false),
+        'channel' => env('SATIM_LOG_CHANNEL', 'stack'),
+    ],
 ];
