@@ -8,3 +8,5 @@ composer.lock
 .DS_Store
 Thumbs.db
 claude.md
+.env
+.env.example
