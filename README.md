@@ -76,27 +76,28 @@ public function success(Request $request)
     $confirmation = $this->satim->confirm($request->mdOrder);
 
     if ($confirmation->isPaid()) {
-        // Payment successful
-        Order::markAsPaid($confirmation->orderNumber);
+        // Payment successful - OrderStatus = 2
     }
 
-    return view('payment.success');
+    return view('payment.success', compact('confirmation'));
 }
 ```
 
 ### Refund Payment
 
 ```php
-public function refund(Order $order)
+public function refund(Request $request)
 {
     $refund = $this->satim->refund(
-        orderId: $order->satim_order_id,
-        amount: $order->amount
+        orderId: $request->order_id,
+        amount: $request->amount // Auto-converted to cents
     );
 
     if ($refund->isSuccessful()) {
-        $order->markAsRefunded();
+        // Refund processed successfully
     }
+
+    return back()->with('success', 'Refund processed');
 }
 ```
 
