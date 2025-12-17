@@ -45,6 +45,67 @@ SATIM_API_URL=https://test2.satim.dz/payment/rest
 
 ## Usage
 
+### Register Payment
+
+```php
+use Oss\SatimLaravel\Contracts\SatimInterface;
+
+class PaymentController extends Controller
+{
+    public function __construct(private SatimInterface $satim) {}
+
+    public function create(Request $request)
+    {
+        $payment = $this->satim
+            ->amount($request->amount) // Auto-converted to cents
+            ->returnUrl(route('payment.success'))
+            ->failUrl(route('payment.failed'))
+            ->description('Order #123')
+            ->register();
+
+        return redirect($payment->formUrl);
+    }
+}
+```
+
+### Confirm Payment
+
+```php
+public function success(Request $request)
+{
+    $confirmation = $this->satim->confirm($request->mdOrder);
+
+    if ($confirmation->isPaid()) {
+        // Payment successful
+        Order::markAsPaid($confirmation->orderNumber);
+    }
+
+    return view('payment.success');
+}
+```
+
+### Refund Payment
+
+```php
+public function refund(Order $order)
+{
+    $refund = $this->satim->refund(
+        orderId: $order->satim_order_id,
+        amount: $order->amount
+    );
+
+    if ($refund->isSuccessful()) {
+        $order->markAsRefunded();
+    }
+}
+```
+
 ## Testing
 
+```bash
+composer test
+```
+
 ## License
+
+MIT License
