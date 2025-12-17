@@ -1,0 +1,62 @@
+{
+    "name": "oss/satim-laravel",
+    "description": "Laravel package for integrating with Satim payment gateway (official Algerian interbank payment system)",
+    "keywords": [
+        "laravel",
+        "payment",
+        "satim",
+        "algeria",
+        "payment-gateway",
+        "dz"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "IdeaCrafters",
+            "email": "contact@ideacrafters.dz"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/http": "^12.0",
+        "illuminate/support": "^12.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.0|^3.0",
+        "orchestra/testbench": "^10.0",
+        "phpunit/phpunit": "^10.5|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Oss\\SatimLaravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Oss\\SatimLaravel\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Oss\\SatimLaravel\\SatimServiceProvider"
+            ],
+            "aliases": {
+                "Satim": "Oss\\SatimLaravel\\Facades\\Satim"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
