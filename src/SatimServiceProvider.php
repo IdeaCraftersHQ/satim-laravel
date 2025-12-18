@@ -20,8 +20,6 @@ class SatimServiceProvider extends ServiceProvider
                 verifySSL: config('satim.verify_ssl'),
                 timeout: config('satim.timeout'),
                 connectTimeout: config('satim.connect_timeout'),
-                loggingEnabled: config('satim.logging.enabled'),
-                logChannel: config('satim.logging.channel'),
             );
         });
 

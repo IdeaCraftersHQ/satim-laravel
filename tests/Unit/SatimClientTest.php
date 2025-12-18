@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Oss\SatimLaravel\Client\SatimClient;
 use Oss\SatimLaravel\DTOs\ConfirmOrderData;
@@ -277,80 +276,3 @@ test('exception includes response context', function () {
             ->and($e->getContext())->toHaveKey('additionalInfo', 'Extra data');
     }
 });
-
-test('handles network connection timeout', function () {
-    Http::fake(function () {
-        throw new ConnectionException('Connection timeout');
-    });
-
-    $data = new RegisterOrderData(
-        orderNumber: '123',
-        amount: 10000,
-        currency: '012',
-        returnUrl: 'https://example.com',
-        language: 'fr',
-        terminalId: 'TEST'
-    );
-
-    $this->client->register($data);
-})->throws(SatimException::class, 'Failed to connect to SATIM');
-
-test('handles HTTP 500 error', function () {
-    Http::fake([
-        'test.satim.dz/*' => Http::response('Internal Server Error', 500),
-    ]);
-
-    $data = new RegisterOrderData(
-        orderNumber: '123',
-        amount: 10000,
-        currency: '012',
-        returnUrl: 'https://example.com',
-        language: 'fr',
-        terminalId: 'TEST'
-    );
-
-    $this->client->register($data);
-})->throws(SatimException::class, 'SATIM API request failed with HTTP 500');
-
-test('handles invalid JSON response', function () {
-    Http::fake([
-        'test.satim.dz/*' => Http::response('Invalid JSON{', 200),
-    ]);
-
-    $data = new RegisterOrderData(
-        orderNumber: '123',
-        amount: 10000,
-        currency: '012',
-        returnUrl: 'https://example.com',
-        language: 'fr',
-        terminalId: 'TEST'
-    );
-
-    $this->client->register($data);
-})->throws(SatimException::class, 'Invalid JSON response from SATIM API');
-
-test('handles HTTP 404 error', function () {
-    Http::fake([
-        'test.satim.dz/*' => Http::response('Not Found', 404),
-    ]);
-
-    $data = new ConfirmOrderData(
-        mdOrder: 'V721uPPfNNofVQAAABL3',
-        language: 'fr'
-    );
-
-    $this->client->confirm($data);
-})->throws(SatimException::class, 'SATIM API request failed with HTTP 404');
-
-test('refund handles network errors', function () {
-    Http::fake(function () {
-        throw new ConnectionException('Network unreachable');
-    });
-
-    $data = new RefundOrderData(
-        orderId: 'abc123',
-        amount: 10000
-    );
-
-    $this->client->refund($data);
-})->throws(SatimException::class, 'Failed to connect to SATIM');

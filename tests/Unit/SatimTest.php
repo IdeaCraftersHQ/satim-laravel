@@ -43,7 +43,7 @@ test('amount method is chainable and converts to cents', function () {
 
     expect($result)->toBeInstanceOf(Satim::class);
 
-    $response = $this->satim->orderNumber('TEST123')->returnUrl('https://example.com')->register();
+    $response = $this->satim->returnUrl('https://example.com')->register();
 
     Http::assertSent(function ($request) {
         return str_contains($request->url(), 'amount=5000'); // 50 DA = 5000 cents
@@ -122,12 +122,26 @@ test('register uses fluent API and returns RegisterOrderResponse', function () {
     });
 });
 
-test('throws exception when orderNumber not provided before register', function () {
-    $this->satim
+test('register auto-generates order number if not provided', function () {
+    Http::fake([
+        '*' => Http::response([
+            'errorCode' => 0,
+            'orderId' => 'test',
+            'formUrl' => 'https://example.com',
+        ]),
+    ]);
+
+    $response = $this->satim
         ->amount(50)
         ->returnUrl('https://example.com')
         ->register();
-})->throws(\Oss\SatimLaravel\Exceptions\SatimValidationException::class, 'Order number is required');
+
+    Http::assertSent(function ($request) {
+        $url = $request->url();
+        preg_match('/orderNumber=(\d+)/', $url, $matches);
+        return isset($matches[1]) && strlen($matches[1]) === 10;
+    });
+});
 
 test('register uses default language if not provided', function () {
     Http::fake([
@@ -140,7 +154,6 @@ test('register uses default language if not provided', function () {
 
     $response = $this->satim
         ->amount(50)
-        ->orderNumber('TEST123')
         ->returnUrl('https://example.com')
         ->register();
 
@@ -169,7 +182,6 @@ test('register resets state after call', function () {
     // Second call should not have values from first call
     $this->satim
         ->amount(200)
-        ->orderNumber('ORDER2')
         ->returnUrl('https://example.com/2')
         ->register();
 

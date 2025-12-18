@@ -8,10 +8,10 @@ Laravel package for integrating with the Satim payment gateway (official Algeria
 - Confirm payment status
 - Process refunds
 - Auto-convert amounts (DA to cents)
+- Auto-generate order numbers
 - Comprehensive test coverage
 - Fluent/chainable API
 - Interface-based design
-- Production logging support
 
 ## Requirements
 
@@ -57,7 +57,6 @@ class PaymentController extends Controller
     public function create(Request $request)
     {
         $payment = $this->satim
-            ->orderNumber('CMD-2024-001') // Required
             ->amount($request->amount) // Auto-converted to cents
             ->returnUrl(route('payment.success'))
             ->failUrl(route('payment.failed'))
@@ -78,8 +77,6 @@ public function success(Request $request)
 
     if ($confirmation->isPaid()) {
         // Payment successful - OrderStatus = 2
-        $statusName = $confirmation->getStatusName(); // "Amount deposited successfully"
-        $amountDA = $confirmation->getAmountInDinars(); // e.g., 100.00
     }
 
     return view('payment.success', compact('confirmation'));
@@ -103,75 +100,6 @@ public function refund(Request $request)
     return back()->with('success', 'Refund processed');
 }
 ```
-
-## Order Status Codes
-
-After confirming a payment, you can check the order status:
-
-| Code | Status | Description |
-|------|--------|-------------|
-| 0 | Registered | Order registered, but not paid |
-| -1 | Failed | Transaction failed |
-| 1 | Approved | Transaction approved / Pre-authorized |
-| 2 | Paid | Amount deposited successfully |
-| 3 | Reversed | Authorization reversed |
-| 4 | Refunded | Transaction refunded |
-| 6 | Declined | Authorization declined |
-| 7 | Card Added | Card added to system |
-| 8 | Card Updated | Card information updated |
-| 9 | Card Verified | Card verified |
-| 10 | Template Added | Recurring template added |
-| 11 | Debited | Amount debited |
-
-```php
-$confirmation = $this->satim->confirm($request->mdOrder);
-
-// Check status
-echo $confirmation->getStatusName(); // "Amount deposited successfully"
-
-// Helper methods
-if ($confirmation->isPaid()) { /* OrderStatus = 2 */ }
-if ($confirmation->isPreAuthorized()) { /* OrderStatus = 1 */ }
-if ($confirmation->isDeclined()) { /* OrderStatus = 6 */ }
-if ($confirmation->isRefunded()) { /* OrderStatus = 4 */ }
-if ($confirmation->isReversed()) { /* OrderStatus = 3 */ }
-```
-
-## User Defined Fields (UDF)
-
-SATIM provides 5 custom fields to store additional data:
-
-```php
-$payment = $this->satim
-    ->orderNumber('CMD001')
-    ->amount(100)
-    ->returnUrl(route('payment.success'))
-    ->udf1('INV-2024-001')      // Invoice number
-    ->udf2('customer-123')       // Customer ID
-    ->udf3('subscription')       // Payment type
-    ->register();
-
-// Retrieve UDF values from confirmation
-$confirmation = $this->satim->confirm($mdOrder);
-$udfFields = $confirmation->getUdfFields();
-// ['udf1' => 'INV-2024-001', 'udf2' => 'customer-123', ...]
-```
-
-## Logging
-
-Enable logging for production debugging by adding to `.env`:
-
-```env
-SATIM_LOGGING_ENABLED=true
-SATIM_LOG_CHANNEL=stack
-```
-
-Logs include:
-- API requests (credentials sanitized)
-- API responses
-- Error details
-
-All sensitive data (username, password) is automatically removed from logs.
 
 ## Testing
 
