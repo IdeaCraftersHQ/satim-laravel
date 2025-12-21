@@ -276,3 +276,67 @@ test('exception includes response context', function () {
             ->and($e->getContext())->toHaveKey('additionalInfo', 'Extra data');
     }
 });
+
+test('throws SatimPaymentException when confirm error code is 2', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response([
+            'ErrorCode' => 2,
+            'ErrorMessage' => 'Order declined due to payment credentials error',
+        ], 200),
+    ]);
+
+    $data = new ConfirmOrderData(
+        mdOrder: 'V721uPPfNNofVQAAABL3',
+        language: 'fr'
+    );
+
+    $this->client->confirm($data);
+})->throws(SatimPaymentException::class, 'Order declined due to payment credentials error');
+
+test('throws SatimPaymentException when confirm error code is 6', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response([
+            'ErrorCode' => 6,
+            'ErrorMessage' => 'Unregistered orderId',
+        ], 200),
+    ]);
+
+    $data = new ConfirmOrderData(
+        mdOrder: 'INVALID_ORDER',
+        language: 'fr'
+    );
+
+    $this->client->confirm($data);
+})->throws(SatimPaymentException::class, 'Unregistered orderId');
+
+test('throws SatimPaymentException when refund error code is 6', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response([
+            'errorCode' => 6,
+            'errorMessage' => 'Unregistered OrderId',
+        ], 200),
+    ]);
+
+    $data = new RefundOrderData(
+        orderId: 'INVALID_ORDER',
+        amount: 10000
+    );
+
+    $this->client->refund($data);
+})->throws(SatimPaymentException::class, 'Unregistered OrderId');
+
+test('throws SatimAuthenticationException when refund amount is invalid', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response([
+            'errorCode' => 5,
+            'errorMessage' => 'Invalid amount',
+        ], 200),
+    ]);
+
+    $data = new RefundOrderData(
+        orderId: 'ORDER123',
+        amount: 10000
+    );
+
+    $this->client->refund($data);
+})->throws(SatimAuthenticationException::class, 'Invalid amount');

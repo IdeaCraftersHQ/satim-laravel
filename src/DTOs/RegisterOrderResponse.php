@@ -23,7 +23,6 @@ readonly class RegisterOrderResponse
             errorCode: $data['errorCode'] ?? 0,
             orderId: $data['orderId'] ?? null,
             formUrl: $data['formUrl'] ?? null,
-            errorMessage: $data['errorMessage'] ?? null,
         );
     }
 }

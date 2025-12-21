@@ -60,7 +60,6 @@ readonly class ConfirmOrderResponse
             currency: $data['currency'] ?? null,
             actionCode: isset($data['actionCode']) ? (int) $data['actionCode'] : null,
             actionCodeDescription: $data['actionCodeDescription'] ?? null,
-            errorMessage: $data['errorMessage'] ?? null,
         );
     }
 }

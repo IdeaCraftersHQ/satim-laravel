@@ -26,6 +26,13 @@ class SatimClient
     ) {
     }
 
+    /**
+     * Register a new payment order
+     *
+     * @throws \Oss\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied, invalid credentials)
+     * @throws \Oss\SatimLaravel\Exceptions\SatimPaymentException When error codes 1, 3, 4, 14 (payment-specific errors)
+     * @throws \Oss\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
+     */
     public function register(RegisterOrderData $data): RegisterOrderResponse
     {
         $response = $this->buildRequest()
@@ -36,11 +43,18 @@ class SatimClient
 
         $responseData = $response->json();
 
-        $this->handleErrors($responseData);
+        $this->handleRegisterErrors($responseData);
 
         return RegisterOrderResponse::fromArray($responseData);
     }
 
+    /**
+     * Confirm payment status
+     *
+     * @throws \Oss\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied)
+     * @throws \Oss\SatimLaravel\Exceptions\SatimPaymentException When error codes 2 (order declined), 6 (unregistered orderId)
+     * @throws \Oss\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
+     */
     public function confirm(ConfirmOrderData $data): ConfirmOrderResponse
     {
         $response = $this->buildRequest()
@@ -51,11 +65,18 @@ class SatimClient
 
         $responseData = $response->json();
 
-        $this->handleErrors($responseData);
+        $this->handleConfirmErrors($responseData);
 
         return ConfirmOrderResponse::fromArray($responseData);
     }
 
+    /**
+     * Refund a payment
+     *
+     * @throws \Oss\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied, invalid amount)
+     * @throws \Oss\SatimLaravel\Exceptions\SatimPaymentException When error code 6 (unregistered orderId)
+     * @throws \Oss\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
+     */
     public function refund(RefundOrderData $data): RefundOrderResponse
     {
         $response = $this->buildRequest()
@@ -66,7 +87,7 @@ class SatimClient
 
         $responseData = $response->json();
 
-        $this->handleErrors($responseData);
+        $this->handleRefundErrors($responseData);
 
         return RefundOrderResponse::fromArray($responseData);
     }
@@ -83,23 +104,118 @@ class SatimClient
         return $request;
     }
 
-    private function handleErrors(array $responseData): void
+    /**
+     * Extract error code from response data (handles both 'errorCode' and 'ErrorCode')
+     */
+    private function getErrorCode(array $responseData): int
     {
-        $errorCode = $responseData['errorCode'] ?? $responseData['ErrorCode'] ?? 0;
+        return (int) ($responseData['errorCode'] ?? $responseData['ErrorCode'] ?? 0);
+    }
+
+    /**
+     * Extract error message from response data (handles both cases)
+     */
+    private function getErrorMessage(array $responseData): string
+    {
+        return $responseData['errorMessage'] ?? $responseData['ErrorMessage'] ?? 'Unknown error';
+    }
+
+    /**
+     * Handle errors specific to register.do endpoint
+     *
+     * Error codes:
+     * - 0: Success
+     * - 1: Order already processed / childId incorrect / Submerchant blocked
+     * - 3: Unknown currency
+     * - 4: Missing parameters (orderNumber, userName, amount, returnUrl, password)
+     * - 5: Invalid parameter / Invalid language / Access denied / Password change
+     * - 7: System error
+     * - 14: Invalid payment way
+     */
+    private function handleRegisterErrors(array $responseData): void
+    {
+        $errorCode = $this->getErrorCode($responseData);
 
         if ($errorCode === 0) {
             return;
         }
 
-        $errorMessage = $responseData['errorMessage'] ?? 'Unknown error';
+        $errorMessage = $this->getErrorMessage($responseData);
 
         // Error code 5: Authentication/Access denied
         if ($errorCode === 5) {
             throw new SatimAuthenticationException($errorMessage, $errorCode, $responseData);
         }
 
-        // Payment-specific errors: 1, 3, 4, 14
-        if (in_array($errorCode, [1, 3, 4, 14])) {
+        // Payment-specific errors for register: 1, 3, 4, 14
+        if (in_array($errorCode, [1, 3, 4, 14], true)) {
+            throw new SatimPaymentException($errorMessage, $errorCode, $responseData);
+        }
+
+        // Generic error for other cases (7, etc.)
+        throw new SatimException($errorMessage, $errorCode, $responseData);
+    }
+
+    /**
+     * Handle errors specific to acknowledgeTransaction.do endpoint
+     *
+     * Error codes (ErrorCode - note the capital E):
+     * - 0: Success
+     * - 2: Order declined due to payment credentials error
+     * - 5: Access denied / Password change required / orderId is empty
+     * - 6: Unregistered orderId
+     * - 7: System error
+     */
+    private function handleConfirmErrors(array $responseData): void
+    {
+        $errorCode = $this->getErrorCode($responseData);
+
+        if ($errorCode === 0) {
+            return;
+        }
+
+        $errorMessage = $this->getErrorMessage($responseData);
+
+        // Error code 5: Authentication/Access denied
+        if ($errorCode === 5) {
+            throw new SatimAuthenticationException($errorMessage, $errorCode, $responseData);
+        }
+
+        // Payment-specific errors for confirm: 2 (declined), 6 (unregistered)
+        if (in_array($errorCode, [2, 6], true)) {
+            throw new SatimPaymentException($errorMessage, $errorCode, $responseData);
+        }
+
+        // Generic error for other cases (7, etc.)
+        throw new SatimException($errorMessage, $errorCode, $responseData);
+    }
+
+    /**
+     * Handle errors specific to refund.do endpoint
+     *
+     * Error codes:
+     * - 0: Success
+     * - 5: Access denied / Password change / Invalid amount / Duplicate refund
+     * - 6: Unregistered orderId
+     * - 7: System error / Payment not in correct state
+     */
+    private function handleRefundErrors(array $responseData): void
+    {
+        $errorCode = $this->getErrorCode($responseData);
+
+        if ($errorCode === 0) {
+            return;
+        }
+
+        $errorMessage = $this->getErrorMessage($responseData);
+
+        // Error code 5: Authentication/Access denied/Invalid amount
+        if ($errorCode === 5) {
+            throw new SatimAuthenticationException($errorMessage, $errorCode, $responseData);
+        }
+
+        // Payment-specific errors for refund: 6 (unregistered orderId)
+        if ($errorCode === 6) {
             throw new SatimPaymentException($errorMessage, $errorCode, $responseData);
         }
 
