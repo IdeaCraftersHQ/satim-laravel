@@ -378,6 +378,10 @@ SATIM_HTTP_VERIFY_SSL=false
 composer test
 ```
 
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
 ## Security
 
 This package handles sensitive payment information. Please ensure:
@@ -391,4 +395,4 @@ If you discover any security-related issues, please email hello@ideacrafters.com
 
 ## License
 
-MIT License
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
