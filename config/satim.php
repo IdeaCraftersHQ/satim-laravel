@@ -50,7 +50,7 @@ return [
     |
     */
 
-    'verify_ssl' => env('SATIM_HTTP_VERIFY_SSL', false),
+    'verify_ssl' => env('SATIM_HTTP_VERIFY_SSL', true),
     'timeout' => env('SATIM_HTTP_TIMEOUT', 30),
     'connect_timeout' => env('SATIM_HTTP_CONNECT_TIMEOUT', 10),
 ];

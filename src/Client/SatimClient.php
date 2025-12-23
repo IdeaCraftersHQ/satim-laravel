@@ -4,7 +4,6 @@ namespace Oss\SatimLaravel\Client;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Oss\SatimLaravel\DTOs\ConfirmOrderData;
 use Oss\SatimLaravel\DTOs\ConfirmOrderResponse;
 use Oss\SatimLaravel\DTOs\RefundOrderData;
@@ -43,7 +42,6 @@ class SatimClient
             ));
 
         $responseData = $response->json();
-        Log::info('SATIM Register Response', ['response' => $responseData]);
         $this->handleRegisterErrors($responseData);
 
         return RegisterOrderResponse::fromArray($responseData);

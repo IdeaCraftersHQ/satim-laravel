@@ -9,6 +9,11 @@
         "payment-gateway",
         "dz"
     ],
+    "homepage": "https://github.com/IdeaCraftersHQ/oss-satim-laravel",
+    "support": {
+        "issues": "https://github.com/IdeaCraftersHQ/oss-satim-laravel/issues",
+        "source": "https://github.com/IdeaCraftersHQ/oss-satim-laravel"
+    },
     "type": "library",
     "license": "MIT",
     "authors": [
