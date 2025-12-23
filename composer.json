@@ -1,5 +1,5 @@
 {
-    "name": "oss/satim-laravel",
+    "name": "ideacrafters/satim-laravel",
     "description": "Laravel package for integrating with Satim payment gateway (official Algerian interbank payment system)",
     "keywords": [
         "laravel",
@@ -18,8 +18,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "IdeaCrafters",
-            "email": "contact@ideacrafters.dz"
+            "name": "Ideacrafters",
+            "email": "hello@ideacrafters.com"
         }
     ],
     "require": {

@@ -1,9 +1,9 @@
 # OSS Satim Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/oss/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/oss/satim-laravel)
-[![Total Downloads](https://img.shields.io/packagist/dt/oss/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/oss/satim-laravel)
-[![License](https://img.shields.io/packagist/l/oss/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/oss/satim-laravel)
-[![PHP Version](https://img.shields.io/packagist/php-v/oss/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/oss/satim-laravel)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/ideacrafters/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/ideacrafters/satim-laravel)
+[![Total Downloads](https://img.shields.io/packagist/dt/ideacrafters/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/ideacrafters/satim-laravel)
+[![License](https://img.shields.io/packagist/l/ideacrafters/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/ideacrafters/satim-laravel)
+[![PHP Version](https://img.shields.io/packagist/php-v/ideacrafters/satim-laravel.svg?style=flat-square)](https://packagist.org/packages/ideacrafters/satim-laravel)
 
 Laravel package for integrating with the Satim payment gateway (official Algerian interbank payment system).
 
@@ -26,7 +26,7 @@ Laravel package for integrating with the Satim payment gateway (official Algeria
 ## Installation
 
 ```bash
-composer require oss/satim-laravel
+composer require ideacrafters/satim-laravel
 ```
 
 ## Configuration
@@ -387,7 +387,7 @@ This package handles sensitive payment information. Please ensure:
 - SSL verification is enabled by default - only disable for local development with self-signed certificates
 - Regularly update the package to receive security fixes
 
-If you discover any security-related issues, please email security@ideacrafters.dz instead of using the issue tracker.
+If you discover any security-related issues, please email hello@ideacrafters.com instead of using the issue tracker.
 
 ## License
 
