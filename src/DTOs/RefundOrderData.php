@@ -1,8 +1,8 @@
 <?php
 
-namespace Oss\SatimLaravel\DTOs;
+namespace Ideacrafters\SatimLaravel\DTOs;
 
-use Oss\SatimLaravel\Exceptions\SatimValidationException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 
 readonly class RefundOrderData
 {

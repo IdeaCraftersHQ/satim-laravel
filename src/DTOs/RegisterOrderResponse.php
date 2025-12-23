@@ -1,6 +1,6 @@
 <?php
 
-namespace Oss\SatimLaravel\DTOs;
+namespace Ideacrafters\SatimLaravel\DTOs;
 
 readonly class RegisterOrderResponse
 {

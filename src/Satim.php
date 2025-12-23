@@ -1,17 +1,17 @@
 <?php
 
-namespace Oss\SatimLaravel;
+namespace Ideacrafters\SatimLaravel;
 
-use Oss\SatimLaravel\Client\SatimClient;
-use Oss\SatimLaravel\Concerns\ConvertsAmounts;
-use Oss\SatimLaravel\Concerns\GeneratesOrderNumbers;
-use Oss\SatimLaravel\Contracts\SatimInterface;
-use Oss\SatimLaravel\DTOs\ConfirmOrderData;
-use Oss\SatimLaravel\DTOs\ConfirmOrderResponse;
-use Oss\SatimLaravel\DTOs\RefundOrderData;
-use Oss\SatimLaravel\DTOs\RefundOrderResponse;
-use Oss\SatimLaravel\DTOs\RegisterOrderData;
-use Oss\SatimLaravel\DTOs\RegisterOrderResponse;
+use Ideacrafters\SatimLaravel\Client\SatimClient;
+use Ideacrafters\SatimLaravel\Concerns\ConvertsAmounts;
+use Ideacrafters\SatimLaravel\Concerns\GeneratesOrderNumbers;
+use Ideacrafters\SatimLaravel\Contracts\SatimInterface;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderData;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderData;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderData;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderResponse;
 
 class Satim implements SatimInterface
 {

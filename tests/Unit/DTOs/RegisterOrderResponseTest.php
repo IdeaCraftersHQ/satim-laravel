@@ -1,6 +1,6 @@
 <?php
 
-use Oss\SatimLaravel\DTOs\RegisterOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderResponse;
 
 test('creates RegisterOrderResponse with success data', function () {
     $response = new RegisterOrderResponse(

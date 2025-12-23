@@ -1,6 +1,6 @@
 <?php
 
-use Oss\SatimLaravel\Concerns\GeneratesOrderNumbers;
+use Ideacrafters\SatimLaravel\Concerns\GeneratesOrderNumbers;
 
 beforeEach(function () {
     $this->trait = new class

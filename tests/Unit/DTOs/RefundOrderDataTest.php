@@ -1,7 +1,7 @@
 <?php
 
-use Oss\SatimLaravel\DTOs\RefundOrderData;
-use Oss\SatimLaravel\Exceptions\SatimValidationException;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderData;
+use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 
 test('creates RefundOrderData with valid data', function () {
     $data = new RefundOrderData(

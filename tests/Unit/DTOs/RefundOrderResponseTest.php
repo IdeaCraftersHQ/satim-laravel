@@ -1,6 +1,6 @@
 <?php
 
-use Oss\SatimLaravel\DTOs\RefundOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderResponse;
 
 test('creates RefundOrderResponse with success', function () {
     $response = new RefundOrderResponse(

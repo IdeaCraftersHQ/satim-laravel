@@ -1,9 +1,9 @@
 <?php
 
-namespace Oss\SatimLaravel\Tests;
+namespace Ideacrafters\SatimLaravel\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
-use Oss\SatimLaravel\SatimServiceProvider;
+use Ideacrafters\SatimLaravel\SatimServiceProvider;
 
 abstract class TestCase extends Orchestra
 {

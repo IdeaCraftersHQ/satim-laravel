@@ -1,6 +1,6 @@
 <?php
 
-use Oss\SatimLaravel\Concerns\ConvertsAmounts;
+use Ideacrafters\SatimLaravel\Concerns\ConvertsAmounts;
 
 beforeEach(function () {
     $this->trait = new class

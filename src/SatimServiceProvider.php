@@ -1,10 +1,10 @@
 <?php
 
-namespace Oss\SatimLaravel;
+namespace Ideacrafters\SatimLaravel;
 
 use Illuminate\Support\ServiceProvider;
-use Oss\SatimLaravel\Client\SatimClient;
-use Oss\SatimLaravel\Contracts\SatimInterface;
+use Ideacrafters\SatimLaravel\Client\SatimClient;
+use Ideacrafters\SatimLaravel\Contracts\SatimInterface;
 
 class SatimServiceProvider extends ServiceProvider
 {

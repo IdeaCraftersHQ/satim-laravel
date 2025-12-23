@@ -1,10 +1,10 @@
 <?php
 
-namespace Oss\SatimLaravel\Contracts;
+namespace Ideacrafters\SatimLaravel\Contracts;
 
-use Oss\SatimLaravel\DTOs\ConfirmOrderResponse;
-use Oss\SatimLaravel\DTOs\RefundOrderResponse;
-use Oss\SatimLaravel\DTOs\RegisterOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderResponse;
 
 interface SatimInterface
 {

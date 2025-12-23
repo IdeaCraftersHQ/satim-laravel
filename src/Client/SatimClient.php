@@ -1,18 +1,18 @@
 <?php
 
-namespace Oss\SatimLaravel\Client;
+namespace Ideacrafters\SatimLaravel\Client;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
-use Oss\SatimLaravel\DTOs\ConfirmOrderData;
-use Oss\SatimLaravel\DTOs\ConfirmOrderResponse;
-use Oss\SatimLaravel\DTOs\RefundOrderData;
-use Oss\SatimLaravel\DTOs\RefundOrderResponse;
-use Oss\SatimLaravel\DTOs\RegisterOrderData;
-use Oss\SatimLaravel\DTOs\RegisterOrderResponse;
-use Oss\SatimLaravel\Exceptions\SatimAuthenticationException;
-use Oss\SatimLaravel\Exceptions\SatimException;
-use Oss\SatimLaravel\Exceptions\SatimPaymentException;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderData;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderData;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderData;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderResponse;
+use Ideacrafters\SatimLaravel\Exceptions\SatimAuthenticationException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimPaymentException;
 
 class SatimClient
 {
@@ -29,9 +29,9 @@ class SatimClient
     /**
      * Register a new payment order
      *
-     * @throws \Oss\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied, invalid credentials)
-     * @throws \Oss\SatimLaravel\Exceptions\SatimPaymentException When error codes 1, 3, 4, 14 (payment-specific errors)
-     * @throws \Oss\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied, invalid credentials)
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimPaymentException When error codes 1, 3, 4, 14 (payment-specific errors)
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
      */
     public function register(RegisterOrderData $data): RegisterOrderResponse
     {
@@ -50,9 +50,9 @@ class SatimClient
     /**
      * Confirm payment status
      *
-     * @throws \Oss\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied)
-     * @throws \Oss\SatimLaravel\Exceptions\SatimPaymentException When error codes 2 (order declined), 6 (unregistered orderId)
-     * @throws \Oss\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied)
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimPaymentException When error codes 2 (order declined), 6 (unregistered orderId)
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
      */
     public function confirm(ConfirmOrderData $data): ConfirmOrderResponse
     {
@@ -72,9 +72,9 @@ class SatimClient
     /**
      * Refund a payment
      *
-     * @throws \Oss\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied, invalid amount)
-     * @throws \Oss\SatimLaravel\Exceptions\SatimPaymentException When error code 6 (unregistered orderId)
-     * @throws \Oss\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimAuthenticationException When error code 5 (access denied, invalid amount)
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimPaymentException When error code 6 (unregistered orderId)
+     * @throws \Ideacrafters\SatimLaravel\Exceptions\SatimException When error code 7 or other system errors
      */
     public function refund(RefundOrderData $data): RefundOrderResponse
     {

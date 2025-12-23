@@ -1,9 +1,9 @@
 <?php
 
-use Oss\SatimLaravel\Exceptions\SatimAuthenticationException;
-use Oss\SatimLaravel\Exceptions\SatimException;
-use Oss\SatimLaravel\Exceptions\SatimPaymentException;
-use Oss\SatimLaravel\Exceptions\SatimValidationException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimAuthenticationException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimPaymentException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 
 test('base SatimException can be instantiated with message only', function () {
     $exception = new SatimException('Test error message');

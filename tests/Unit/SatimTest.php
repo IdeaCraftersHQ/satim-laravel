@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
-use Oss\SatimLaravel\Client\SatimClient;
-use Oss\SatimLaravel\Contracts\SatimInterface;
-use Oss\SatimLaravel\DTOs\ConfirmOrderResponse;
-use Oss\SatimLaravel\DTOs\RefundOrderResponse;
-use Oss\SatimLaravel\DTOs\RegisterOrderResponse;
-use Oss\SatimLaravel\Satim;
+use Ideacrafters\SatimLaravel\Client\SatimClient;
+use Ideacrafters\SatimLaravel\Contracts\SatimInterface;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderResponse;
+use Ideacrafters\SatimLaravel\Satim;
 
 beforeEach(function () {
     $this->client = new SatimClient(

@@ -1,7 +1,7 @@
 <?php
 
-use Oss\SatimLaravel\DTOs\ConfirmOrderData;
-use Oss\SatimLaravel\Exceptions\SatimValidationException;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderData;
+use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 
 test('creates ConfirmOrderData with valid data', function () {
     $data = new ConfirmOrderData(

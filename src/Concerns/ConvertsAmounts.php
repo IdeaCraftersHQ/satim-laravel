@@ -1,6 +1,6 @@
 <?php
 
-namespace Oss\SatimLaravel\Concerns;
+namespace Ideacrafters\SatimLaravel\Concerns;
 
 trait ConvertsAmounts
 {

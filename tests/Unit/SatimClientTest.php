@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
-use Oss\SatimLaravel\Client\SatimClient;
-use Oss\SatimLaravel\DTOs\ConfirmOrderData;
-use Oss\SatimLaravel\DTOs\RefundOrderData;
-use Oss\SatimLaravel\DTOs\RegisterOrderData;
-use Oss\SatimLaravel\Exceptions\SatimAuthenticationException;
-use Oss\SatimLaravel\Exceptions\SatimException;
-use Oss\SatimLaravel\Exceptions\SatimPaymentException;
+use Ideacrafters\SatimLaravel\Client\SatimClient;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderData;
+use Ideacrafters\SatimLaravel\DTOs\RefundOrderData;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderData;
+use Ideacrafters\SatimLaravel\Exceptions\SatimAuthenticationException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimPaymentException;
 
 beforeEach(function () {
     $this->client = new SatimClient(

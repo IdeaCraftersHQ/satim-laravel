@@ -1,7 +1,7 @@
 <?php
 
-use Oss\SatimLaravel\DTOs\RegisterOrderData;
-use Oss\SatimLaravel\Exceptions\SatimValidationException;
+use Ideacrafters\SatimLaravel\DTOs\RegisterOrderData;
+use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 
 test('creates RegisterOrderData with valid data', function () {
     $data = new RegisterOrderData(

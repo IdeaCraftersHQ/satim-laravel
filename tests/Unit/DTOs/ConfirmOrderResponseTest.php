@@ -1,6 +1,6 @@
 <?php
 
-use Oss\SatimLaravel\DTOs\ConfirmOrderResponse;
+use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
 
 test('creates ConfirmOrderResponse with paid order', function () {
     $response = new ConfirmOrderResponse(

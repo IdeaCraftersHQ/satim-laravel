@@ -1,6 +1,6 @@
 <?php
 
-namespace Oss\SatimLaravel\Exceptions;
+namespace Ideacrafters\SatimLaravel\Exceptions;
 
 use Exception;
 use Throwable;

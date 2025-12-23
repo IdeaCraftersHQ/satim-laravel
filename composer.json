@@ -34,12 +34,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Oss\\SatimLaravel\\": "src/"
+            "Ideacrafters\\SatimLaravel\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Oss\\SatimLaravel\\Tests\\": "tests/"
+            "Ideacrafters\\SatimLaravel\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -49,10 +49,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Oss\\SatimLaravel\\SatimServiceProvider"
+                "Ideacrafters\\SatimLaravel\\SatimServiceProvider"
             ],
             "aliases": {
-                "Satim": "Oss\\SatimLaravel\\Facades\\Satim"
+                "Satim": "Ideacrafters\\SatimLaravel\\Facades\\Satim"
             }
         }
     },

@@ -86,8 +86,8 @@ SATIM_API_URL=https://test2.satim.dz/payment/rest
 ### Step 1: Register Payment
 
 ```php
-use Oss\SatimLaravel\Facades\Satim;
-use Oss\SatimLaravel\Exceptions\SatimException;
+use Ideacrafters\SatimLaravel\Facades\Satim;
+use Ideacrafters\SatimLaravel\Exceptions\SatimException;
 
 class PaymentController extends Controller
 {
@@ -226,9 +226,9 @@ $refund->errorMessage;    // Error description if failed
 The package throws three types of exceptions:
 
 ```php
-use Oss\SatimLaravel\Exceptions\SatimAuthenticationException;
-use Oss\SatimLaravel\Exceptions\SatimPaymentException;
-use Oss\SatimLaravel\Exceptions\SatimException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimAuthenticationException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimPaymentException;
+use Ideacrafters\SatimLaravel\Exceptions\SatimException;
 
 try {
     $payment = Satim::amount(100)->returnUrl(...)->register();
@@ -260,7 +260,7 @@ try {
 ### Using Dependency Injection
 
 ```php
-use Oss\SatimLaravel\Contracts\SatimInterface;
+use Ideacrafters\SatimLaravel\Contracts\SatimInterface;
 
 class PaymentController extends Controller
 {
