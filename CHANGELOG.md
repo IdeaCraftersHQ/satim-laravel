@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Expand PHP support to 8.1+ (previously 8.2+)
+- Add Laravel 10 and 11 compatibility (previously Laravel 12 only)
+- Update test dependencies to support Laravel 10-12
+
 ## [1.0.0] - 2025-12-23
 
 ### Added

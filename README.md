@@ -20,8 +20,8 @@ Laravel package for integrating with the Satim payment gateway (official Algeria
 
 ## Requirements
 
-- PHP 8.2+
-- Laravel 12.x
+- PHP 8.1+
+- Laravel 10.x, 11.x, or 12.x
 
 ## Installation
 
