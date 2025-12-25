@@ -6,6 +6,7 @@ use Ideacrafters\SatimLaravel\Contracts\SatimInterface;
 use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
 use Ideacrafters\SatimLaravel\DTOs\RefundOrderResponse;
 use Ideacrafters\SatimLaravel\DTOs\RegisterOrderResponse;
+use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 use Ideacrafters\SatimLaravel\Satim;
 
 beforeEach(function () {
@@ -43,7 +44,11 @@ test('amount method is chainable and converts to cents', function () {
 
     expect($result)->toBeInstanceOf(Satim::class);
 
-    $response = $this->satim->returnUrl('https://example.com')->register();
+    $response = $this->satim
+        ->orderNumber('ORDER123')
+        ->returnUrl('https://example.com')
+        ->udf1('test123')
+        ->register();
 
     Http::assertSent(function ($request) {
         return str_contains($request->url(), 'amount=5000'); // 50 DA = 5000 cents
@@ -118,30 +123,17 @@ test('register uses fluent API and returns RegisterOrderResponse', function () {
             str_contains($url, 'returnUrl=') &&
             str_contains($url, 'failUrl=') &&
             str_contains($url, 'description=') &&
-            str_contains($url, 'language=en');
+            str_contains($url, 'language=EN'); // Uppercase now
     });
 });
 
-test('register auto-generates order number if not provided', function () {
-    Http::fake([
-        '*' => Http::response([
-            'errorCode' => 0,
-            'orderId' => 'test',
-            'formUrl' => 'https://example.com',
-        ]),
-    ]);
-
-    $response = $this->satim
+test('throws exception when order number is not provided', function () {
+    $this->satim
         ->amount(50)
         ->returnUrl('https://example.com')
+        ->udf1('test123')
         ->register();
-
-    Http::assertSent(function ($request) {
-        $url = $request->url();
-        preg_match('/orderNumber=(\d+)/', $url, $matches);
-        return isset($matches[1]) && strlen($matches[1]) === 10;
-    });
-});
+})->throws(SatimValidationException::class, 'Order number is required');
 
 test('register uses default language if not provided', function () {
     Http::fake([
@@ -154,11 +146,13 @@ test('register uses default language if not provided', function () {
 
     $response = $this->satim
         ->amount(50)
+        ->orderNumber('ORDER123')
         ->returnUrl('https://example.com')
+        ->udf1('test123')
         ->register();
 
     Http::assertSent(function ($request) {
-        return str_contains($request->url(), 'language=fr'); // default language
+        return str_contains($request->url(), 'language=FR'); // Uppercase default language
     });
 });
 
@@ -177,12 +171,15 @@ test('register resets state after call', function () {
         ->orderNumber('ORDER1')
         ->returnUrl('https://example.com/1')
         ->description('First payment')
+        ->udf1('first123')
         ->register();
 
     // Second call should not have values from first call
     $this->satim
         ->amount(200)
+        ->orderNumber('ORDER2')
         ->returnUrl('https://example.com/2')
+        ->udf1('second123')
         ->register();
 
     Http::assertSent(function ($request) {
@@ -302,7 +299,7 @@ test('fluent API allows method chaining in any order', function () {
 
     Http::assertSent(function ($request) {
         return str_contains($request->url(), 'amount=7500') &&
-            str_contains($request->url(), 'language=ar') &&
+            str_contains($request->url(), 'language=AR') && // Uppercase
             str_contains($request->url(), 'orderNumber=CMD999');
     });
 });

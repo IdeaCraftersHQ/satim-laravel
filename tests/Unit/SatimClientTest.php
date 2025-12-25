@@ -35,7 +35,8 @@ test('register sends correct request and returns RegisterOrderResponse', functio
         currency: '012',
         returnUrl: 'https://example.com/success',
         language: 'fr',
-        terminalId: 'TEST123'
+        terminalId: 'TEST123',
+        udf1: 'test123'
     );
 
     $response = $this->client->register($data);
@@ -129,7 +130,8 @@ test('throws SatimAuthenticationException when error code is 5', function () {
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'test123'
     );
 
     $this->client->register($data);
@@ -149,7 +151,8 @@ test('throws SatimPaymentException when error code is 1', function () {
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'test123'
     );
 
     $this->client->register($data);
@@ -169,7 +172,8 @@ test('throws SatimPaymentException when error code is 3', function () {
         currency: '999',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'test123'
     );
 
     $this->client->register($data);
@@ -189,7 +193,8 @@ test('throws SatimPaymentException when error code is 4', function () {
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'test123'
     );
 
     $this->client->register($data);
@@ -209,7 +214,8 @@ test('throws SatimPaymentException when error code is 14', function () {
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'test123'
     );
 
     $this->client->register($data);
@@ -229,7 +235,8 @@ test('throws SatimException for other error codes', function () {
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'test123'
     );
 
     $this->client->register($data);
@@ -266,7 +273,8 @@ test('exception includes response context', function () {
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'test123'
     );
 
     try {

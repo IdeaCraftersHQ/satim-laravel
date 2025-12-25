@@ -6,38 +6,75 @@ use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 
 readonly class RegisterOrderData
 {
+    private const MAX_AMOUNT = 99999999999999999999;
+
+    public string $orderNumber;
+    public int $amount;
+    public string $currency;
+    public string $returnUrl;
+    public string $language;
+    public string $terminalId;
+    public ?string $udf1;
+    public ?string $failUrl;
+    public ?string $description;
+    public ?string $udf2;
+    public ?string $udf3;
+    public ?string $udf4;
+    public ?string $udf5;
+
     public function __construct(
-        public string $orderNumber,
-        public int $amount,
-        public string $currency,
-        public string $returnUrl,
-        public string $language,
-        public string $terminalId,
-        public ?string $failUrl = null,
-        public ?string $description = null,
-        public ?string $udf1 = null,
-        public ?string $udf2 = null,
-        public ?string $udf3 = null,
-        public ?string $udf4 = null,
-        public ?string $udf5 = null,
+        string $orderNumber,
+        int $amount,
+        string $currency,
+        string $returnUrl,
+        string $language,
+        string $terminalId,
+        ?string $failUrl = null,
+        ?string $description = null,
+        ?string $udf1 = null,
+        ?string $udf2 = null,
+        ?string $udf3 = null,
+        ?string $udf4 = null,
+        ?string $udf5 = null,
     ) {
+        
+        $this->orderNumber = trim($orderNumber);
+        $this->amount = $amount;
+        $this->currency = trim($currency);
+        $this->returnUrl = trim($returnUrl);
+        $this->language = strtoupper(trim($language));
+        $this->terminalId = trim($terminalId);
+
+        // Trim optional fields only if not null
+        $this->failUrl = $failUrl !== null ? trim($failUrl) : null;
+        $this->description = $description !== null ? trim($description) : null;
+        $this->udf1 = $udf1 !== null ? trim($udf1) : null;
+        $this->udf2 = $udf2 !== null ? trim($udf2) : null;
+        $this->udf3 = $udf3 !== null ? trim($udf3) : null;
+        $this->udf4 = $udf4 !== null ? trim($udf4) : null;
+        $this->udf5 = $udf5 !== null ? trim($udf5) : null;
+
         $this->validate();
     }
 
     private function validate(): void
     {
         // Order Number validation
-        if (empty($this->orderNumber)) {
-            throw new SatimValidationException('Order number is required');
+        if (!preg_match('/^[A-Za-z0-9]{1,10}$/', $this->orderNumber)) {
+            throw new SatimValidationException(
+                'Order number must be alphanumeric (A-Z, a-z, 0-9) and 1-10 characters'
+            );
         }
 
-        if (strlen($this->orderNumber) > 10) {
-            throw new SatimValidationException('Order number must not exceed 10 characters');
-        }
-
-        // Amount validation
+        // 2. Amount validation (N..20, min 5000 cents, max 20 digits, multiple of 100)
         if ($this->amount < 5000) {
             throw new SatimValidationException('Amount must be at least 5000 cents (50 DA)');
+        }
+
+        if ($this->amount > self::MAX_AMOUNT) {
+            throw new SatimValidationException(
+                'Amount exceeds maximum allowed value (20 digits = 999,999,999,999,999,999.99 DA)'
+            );
         }
 
         if ($this->amount % 100 !== 0) {
@@ -45,8 +82,10 @@ readonly class RegisterOrderData
         }
 
         // Currency validation
-        if (empty($this->currency)) {
-            throw new SatimValidationException('Currency is required');
+        if (!preg_match('/^\d{3}$/', $this->currency)) {
+            throw new SatimValidationException(
+                'Currency must be a 3-digit ISO 4217 code (e.g., "012" for DZD)'
+            );
         }
 
         // Return URL validation
@@ -64,29 +103,29 @@ readonly class RegisterOrderData
         }
 
         // Description validation (optional)
-        if ($this->description !== null && strlen($this->description) > 512) {
+        if ($this->description !== null && mb_strlen($this->description, 'UTF-8') > 512) {
             throw new SatimValidationException('Description must not exceed 512 characters');
         }
 
-        // Language validation
-        if (empty($this->language)) {
-            throw new SatimValidationException('Language is required');
-        }
-
         $validLanguages = ['FR', 'EN', 'AR'];
-        if (!in_array(strtoupper($this->language), $validLanguages)) {
+        if (!in_array($this->language, $validLanguages)) {
             throw new SatimValidationException('Language must be FR, EN, or AR');
         }
 
-        // Terminal ID validation
-        if (empty($this->terminalId)) {
-            throw new SatimValidationException('Terminal ID is required');
+        if (!preg_match('/^[A-Za-z0-9]{1,16}$/', $this->terminalId)) {
+            throw new SatimValidationException(
+                'Terminal ID must be alphanumeric and 1-16 characters'
+            );
         }
 
-        // UDF fields validation (optional, max 20 chars each)
+        // UDF1-5 validation (all optional, but must be alphanumeric if provided)
         foreach (['udf1', 'udf2', 'udf3', 'udf4', 'udf5'] as $field) {
-            if ($this->$field !== null && strlen($this->$field) > 20) {
-                throw new SatimValidationException(ucfirst($field).' must not exceed 20 characters');
+            if ($this->$field !== null) {
+                if (!preg_match('/^[A-Za-z0-9]{1,20}$/', $this->$field)) {
+                    throw new SatimValidationException(
+                        ucfirst($field).' must be alphanumeric and 1-20 characters'
+                    );
+                }
             }
         }
     }

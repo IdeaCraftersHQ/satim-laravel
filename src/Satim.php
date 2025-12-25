@@ -4,7 +4,6 @@ namespace Ideacrafters\SatimLaravel;
 
 use Ideacrafters\SatimLaravel\Client\SatimClient;
 use Ideacrafters\SatimLaravel\Concerns\ConvertsAmounts;
-use Ideacrafters\SatimLaravel\Concerns\GeneratesOrderNumbers;
 use Ideacrafters\SatimLaravel\Contracts\SatimInterface;
 use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderData;
 use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
@@ -12,10 +11,11 @@ use Ideacrafters\SatimLaravel\DTOs\RefundOrderData;
 use Ideacrafters\SatimLaravel\DTOs\RefundOrderResponse;
 use Ideacrafters\SatimLaravel\DTOs\RegisterOrderData;
 use Ideacrafters\SatimLaravel\DTOs\RegisterOrderResponse;
+use Ideacrafters\SatimLaravel\Exceptions\SatimValidationException;
 
 class Satim implements SatimInterface
 {
-    use ConvertsAmounts, GeneratesOrderNumbers;
+    use ConvertsAmounts;
 
     private ?int $amount = null;
     private ?string $orderNumber = null;
@@ -116,8 +116,15 @@ class Satim implements SatimInterface
 
     public function register(): RegisterOrderResponse
     {
+        // Validate required fields before creating DTO
+        if ($this->orderNumber === null) {
+            throw new SatimValidationException(
+                'Order number is required'
+            );
+        }
+
         $data = new RegisterOrderData(
-            orderNumber: $this->orderNumber ?? $this->generateOrderNumber(),
+            orderNumber: $this->orderNumber,
             amount: $this->amount,
             currency: $this->currency,
             returnUrl: $this->returnUrl,
