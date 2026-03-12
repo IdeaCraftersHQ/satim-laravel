@@ -14,7 +14,7 @@ readonly class RegisterOrderData
     public string $returnUrl;
     public string $language;
     public string $terminalId;
-    public ?string $udf1;
+    public string $udf1;
     public ?string $failUrl;
     public ?string $description;
     public ?string $udf2;
@@ -29,26 +29,25 @@ readonly class RegisterOrderData
         string $returnUrl,
         string $language,
         string $terminalId,
+        string $udf1,
         ?string $failUrl = null,
         ?string $description = null,
-        ?string $udf1 = null,
         ?string $udf2 = null,
         ?string $udf3 = null,
         ?string $udf4 = null,
         ?string $udf5 = null,
     ) {
-        
         $this->orderNumber = trim($orderNumber);
         $this->amount = $amount;
         $this->currency = trim($currency);
         $this->returnUrl = trim($returnUrl);
         $this->language = strtoupper(trim($language));
         $this->terminalId = trim($terminalId);
+        $this->udf1 = trim($udf1);
 
         // Trim optional fields only if not null
         $this->failUrl = $failUrl !== null ? trim($failUrl) : null;
         $this->description = $description !== null ? trim($description) : null;
-        $this->udf1 = $udf1 !== null ? trim($udf1) : null;
         $this->udf2 = $udf2 !== null ? trim($udf2) : null;
         $this->udf3 = $udf3 !== null ? trim($udf3) : null;
         $this->udf4 = $udf4 !== null ? trim($udf4) : null;
@@ -118,8 +117,13 @@ readonly class RegisterOrderData
             );
         }
 
-        // UDF1-5 validation (all optional, but must be alphanumeric if provided)
-        foreach (['udf1', 'udf2', 'udf3', 'udf4', 'udf5'] as $field) {
+        // udf1 is required
+        if (!preg_match('/^[A-Za-z0-9]{1,20}$/', $this->udf1)) {
+            throw new SatimValidationException('Udf1 must be alphanumeric and 1-20 characters');
+        }
+
+        // UDF2-5 validation (all optional, but must be alphanumeric if provided)
+        foreach (['udf2', 'udf3', 'udf4', 'udf5'] as $field) {
             if ($this->$field !== null) {
                 if (!preg_match('/^[A-Za-z0-9]{1,20}$/', $this->$field)) {
                     throw new SatimValidationException(
@@ -145,7 +149,7 @@ readonly class RegisterOrderData
                 'udf3' => $this->udf3,
                 'udf4' => $this->udf4,
                 'udf5' => $this->udf5,
-            ])),
+            ], fn ($v) => $v !== null)),
         ];
 
         if ($this->failUrl !== null) {

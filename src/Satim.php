@@ -122,6 +122,9 @@ class Satim implements SatimInterface
                 'Order number is required'
             );
         }
+        if ($this->udf1 === null) {
+            throw new SatimValidationException('udf1 is required');
+        }
 
         $data = new RegisterOrderData(
             orderNumber: $this->orderNumber,

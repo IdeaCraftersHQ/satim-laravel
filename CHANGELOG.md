@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-03-12
+
+### Fixed
+- **`udf1` now always present in SATIM payment requests** — replaced `array_filter()` with a null-only filter (`fn($v) => $v !== null`) in `RegisterOrderData::toArray()`, preventing falsy string values (e.g. `"0"`) from being silently stripped from `jsonParams`
+- Fixed constructor parameter order in `RegisterOrderData` — `udf1` (required) was incorrectly placed after optional parameters, which is deprecated in PHP 8.1+
+
+### Changed
+- `udf1` is now enforced as a required field at both the `Satim` orchestration layer and the `RegisterOrderData` DTO level, satisfying SATIM certification requirements
+
+### Tests
+- Replaced stale "accepts null for udf1" test with "throws exception when udf1 is not provided"
+- Updated "accepts null for optional udf1-5 fields" test to cover only udf2-5 (udf1 is required)
+- Added test: `toArray always includes udf1 in jsonParams even with numeric-only value`
+- Added test: `throws exception when udf1 is not provided` in `SatimTest`
+- Added test: `register includes udf1 in jsonParams sent to SATIM`
+
 ## [1.2.0] - 2025-12-25
 
 ### Changed

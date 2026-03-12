@@ -135,6 +135,40 @@ test('throws exception when order number is not provided', function () {
         ->register();
 })->throws(SatimValidationException::class, 'Order number is required');
 
+test('throws exception when udf1 is not provided', function () {
+    $this->satim
+        ->amount(50)
+        ->orderNumber('ORDER123')
+        ->returnUrl('https://example.com')
+        ->register();
+})->throws(SatimValidationException::class, 'udf1 is required');
+
+test('register includes udf1 in jsonParams sent to SATIM', function () {
+    Http::fake([
+        '*' => Http::response([
+            'errorCode' => 0,
+            'orderId' => 'test',
+            'formUrl' => 'https://example.com',
+        ]),
+    ]);
+
+    $this->satim
+        ->amount(50)
+        ->orderNumber('ORDER123')
+        ->returnUrl('https://example.com')
+        ->udf1('customer42')
+        ->register();
+
+    Http::assertSent(function ($request) {
+        $url = urldecode($request->url());
+        $jsonParams = json_decode(
+            preg_match('/jsonParams=({[^&]+})/', $url, $m) ? $m[1] : '{}',
+            true
+        );
+        return isset($jsonParams['udf1']) && $jsonParams['udf1'] === 'customer42';
+    });
+});
+
 test('register uses default language if not provided', function () {
     Http::fake([
         '*' => Http::response([

@@ -283,19 +283,18 @@ test('accepts valid terminal IDs', function () {
     }
 });
 
-// UDF1 validation tests (optional)
-test('accepts null for udf1', function () {
-    $data = new RegisterOrderData(
+// UDF1 validation tests (required)
+test('throws exception when udf1 is not provided', function () {
+    new RegisterOrderData(
         orderNumber: '123',
         amount: 10000,
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: ''
     );
-
-    expect($data->udf1)->toBeNull();
-});
+})->throws(SatimValidationException::class, 'Udf1 must be alphanumeric');
 
 test('throws exception when udf1 is empty string', function () {
     new RegisterOrderData(
@@ -378,18 +377,18 @@ test('throws exception when udf3 exceeds 20 characters', function () {
     );
 })->throws(SatimValidationException::class, 'Udf3 must be alphanumeric');
 
-test('accepts null for optional udf1-5 fields', function () {
+test('accepts null for optional udf2-5 fields', function () {
     $data = new RegisterOrderData(
         orderNumber: '123',
         amount: 10000,
         currency: '012',
         returnUrl: 'https://example.com',
         language: 'fr',
-        terminalId: 'TEST'
+        terminalId: 'TEST',
+        udf1: 'required123'
     );
 
-    expect($data->udf1)->toBeNull()
-        ->and($data->udf2)->toBeNull()
+    expect($data->udf2)->toBeNull()
         ->and($data->udf3)->toBeNull()
         ->and($data->udf4)->toBeNull()
         ->and($data->udf5)->toBeNull();
@@ -444,6 +443,22 @@ test('toArray excludes null optional fields', function () {
     expect($array)
         ->not->toHaveKey('failUrl')
         ->not->toHaveKey('description');
+});
+
+test('toArray always includes udf1 in jsonParams even with numeric-only value', function () {
+    $data = new RegisterOrderData(
+        orderNumber: '123',
+        amount: 10000,
+        currency: '012',
+        returnUrl: 'https://example.com',
+        language: 'fr',
+        terminalId: 'TEST',
+        udf1: '123456'
+    );
+
+    $jsonParams = json_decode($data->toArray()['jsonParams'], true);
+
+    expect($jsonParams)->toHaveKey('udf1', '123456');
 });
 
 test('toArray includes only non-null udf fields in jsonParams', function () {
