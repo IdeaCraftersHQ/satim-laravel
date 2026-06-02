@@ -348,3 +348,66 @@ test('throws SatimAuthenticationException when refund amount is invalid', functi
 
     $this->client->refund($data);
 })->throws(SatimAuthenticationException::class, 'Invalid amount');
+
+// ──────────────────────────────────────────────────────────
+// Null/empty response guard — keeps a SATIM gateway blip from
+// propagating as a raw TypeError out of handle*Errors($responseData).
+// ──────────────────────────────────────────────────────────
+
+test('register throws SatimException when the gateway returns an empty body', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response('', 200),
+    ]);
+
+    $data = new RegisterOrderData(
+        orderNumber: '1234567890',
+        amount: 10000,
+        currency: '012',
+        returnUrl: 'https://example.com/success',
+        language: 'fr',
+        terminalId: 'TEST123',
+        udf1: 'guardtest',
+    );
+
+    $this->client->register($data);
+})->throws(SatimException::class, 'unparseable response for "register"');
+
+test('register throws SatimException when the gateway returns non-JSON body', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response('<html>upstream timeout</html>', 504),
+    ]);
+
+    $data = new RegisterOrderData(
+        orderNumber: '1234567890',
+        amount: 10000,
+        currency: '012',
+        returnUrl: 'https://example.com/success',
+        language: 'fr',
+        terminalId: 'TEST123',
+        udf1: 'guardtest',
+    );
+
+    $this->client->register($data);
+})->throws(SatimException::class, 'unparseable response for "register"');
+
+test('confirm throws SatimException on null response', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response('', 200),
+    ]);
+
+    $this->client->confirm(new ConfirmOrderData(
+        mdOrder: 'V721uPPfNNofVQAAABL3',
+        language: 'fr',
+    ));
+})->throws(SatimException::class, 'unparseable response for "confirm"');
+
+test('refund throws SatimException on null response', function () {
+    Http::fake([
+        'test.satim.dz/*' => Http::response('', 200),
+    ]);
+
+    $this->client->refund(new RefundOrderData(
+        orderId: 'ORDER123',
+        amount: 10000,
+    ));
+})->throws(SatimException::class, 'unparseable response for "refund"');

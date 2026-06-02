@@ -3,6 +3,7 @@
 namespace Ideacrafters\SatimLaravel\Client;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderData;
 use Ideacrafters\SatimLaravel\DTOs\ConfirmOrderResponse;
@@ -41,7 +42,7 @@ class SatimClient
                 $data->toArray()
             ));
 
-        $responseData = $response->json();
+        $responseData = $this->decodeResponse($response, 'register');
         $this->handleRegisterErrors($responseData);
 
         return RegisterOrderResponse::fromArray($responseData);
@@ -62,7 +63,7 @@ class SatimClient
                 $data->toArray()
             ));
 
-        $responseData = $response->json();
+        $responseData = $this->decodeResponse($response, 'confirm');
 
         $this->handleConfirmErrors($responseData);
 
@@ -84,11 +85,43 @@ class SatimClient
                 $data->toArray()
             ));
 
-        $responseData = $response->json();
+        $responseData = $this->decodeResponse($response, 'refund');
 
         $this->handleRefundErrors($responseData);
 
         return RefundOrderResponse::fromArray($responseData);
+    }
+
+    /**
+     * Decode a SATIM HTTP response body into the associative array expected
+     * by the handle*Errors methods. SATIM occasionally returns an empty body
+     * or non-JSON payload on gateway timeouts / partial outages — left
+     * un-checked, the resulting null would hit a typed `array` parameter
+     * downstream and throw a raw TypeError. We translate that here into a
+     * domain SatimException so callers can catch it cleanly.
+     *
+     * @throws SatimException When the body is null, non-array, or empty.
+     */
+    private function decodeResponse(Response $response, string $operation): array
+    {
+        $data = $response->json();
+
+        if (! is_array($data) || $data === []) {
+            throw new SatimException(
+                sprintf(
+                    'SATIM gateway returned an unparseable response for "%s" (HTTP %d).',
+                    $operation,
+                    $response->status(),
+                ),
+                context: [
+                    'operation' => $operation,
+                    'status' => $response->status(),
+                    'body_excerpt' => mb_substr((string) $response->body(), 0, 200),
+                ],
+            );
+        }
+
+        return $data;
     }
 
     private function buildRequest(): PendingRequest
