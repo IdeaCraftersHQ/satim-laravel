@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-06-02
+
+### Fixed
+- Guard against null/empty gateway responses in `SatimClient::register/confirm/refund`. Previously an empty body or non-JSON payload from SATIM (timeout, partial outage) surfaced as an uncaught `TypeError`; it now throws a catchable `SatimException` with the operation name and body excerpt.
+
 ## [1.2.1] - 2026-03-12
 
 ### Fixed
