@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-06-17
+
 ### Added
 - Support for Laravel 13.x (`illuminate/http` and `illuminate/support` `^13.0`).
+
+### Changed
+- Widened dev dependencies: `pestphp/pest` `^4.0`, `orchestra/testbench` `^11.0`, `phpunit/phpunit` `^12.0`.
 
 ## [1.2.2] - 2026-06-02
 
