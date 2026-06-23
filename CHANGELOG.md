@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-06-23
+
+### Fixed
+- Corrected production gateway URL in `README.md` and `config/satim.php` — `satim.dz` (corporate website, returns 404) replaced with `cib.satim.dz` (actual payment gateway). Added staging URL (`test.satim.dz`) alongside the existing certification and production entries.
+
 ## [1.3.0] - 2026-06-17
 
 ### Added

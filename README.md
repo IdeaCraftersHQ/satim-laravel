@@ -63,8 +63,9 @@ SATIM_API_URL=https://test2.satim.dz/payment/rest
 | `SATIM_HTTP_CONNECT_TIMEOUT` | Connection timeout (seconds) | `10` | No |
 
 **Environment URLs:**
-- Test: `https://test2.satim.dz/payment/rest`
-- Production: `https://satim.dz/payment/rest`
+- Certification: `https://test2.satim.dz/payment/rest`
+- Staging: `https://test.satim.dz/payment/rest`
+- Production: `https://cib.satim.dz/payment/rest`
 
 ## Quick Start
 

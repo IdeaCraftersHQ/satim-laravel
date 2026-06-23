@@ -34,8 +34,9 @@ return [
     |--------------------------------------------------------------------------
     |
     | Satim API base URL. Use test environment for development:
-    | Test: https://test2.satim.dz/payment/rest
-    | Production: https://satim.dz/payment/rest
+    | Certification: https://test2.satim.dz/payment/rest
+    | Staging:       https://test.satim.dz/payment/rest
+    | Production:    https://cib.satim.dz/payment/rest
     |
     */
 
